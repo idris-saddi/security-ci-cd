@@ -1,0 +1,29 @@
+name: CI/CD Pipeline DevSecOps
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+jobs:
+  build_and_test:
+    runs-on: ubuntu-latest
+
+    steps:
+    - name: Checkout code
+      uses: actions/checkout@v4
+
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+
+    - name: Install dependencies and Run Unit Tests
+      working-directory: ./app
+      run: |
+        npm install
+        npm test
+        
+    - name: Build Docker Image
+      run: docker build -t my-app-image .

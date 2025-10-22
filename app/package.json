@@ -1,0 +1,10 @@
+{
+  "name": "devsecops-app",
+  "version": "1.0.0",
+  "dependencies": {
+    "express": "^4.17.1"
+  },
+  "scripts": {
+    "test": "echo 'No unit tests configured yet' && exit 0"
+  }
+}
