@@ -78,6 +78,9 @@ jobs:
   dast_scan:
     runs-on: ubuntu-latest
     needs: build_and_test # Dépend du succès du job précédent
+    permissions:
+      contents: read
+      issues: write # Required for ZAP to create GitHub issues
     
     steps:
     - name: Checkout code
