@@ -56,8 +56,8 @@ jobs:
       run: |
         echo "Exécution de la vérification de la porte de sécurité (SAST/SCA)..."
         
-        snyk test --fail-on=high || (echo "ECHEC: Vulnérabilités SCA Critiques/Hautes détectées." && exit 1)
-        snyk code test --fail-on=high || (echo "ECHEC: Vulnérabilités SAST Critiques/Hautes détectées." && exit 1)
+        snyk test --severity-threshold=high || (echo "ECHEC: Vulnérabilités SCA Critiques/Hautes détectées." && exit 1)
+        snyk code test --severity-threshold=high || (echo "ECHEC: Vulnérabilités SAST Critiques/Hautes détectées." && exit 1)
         
         echo "SAST/SCA PASSÉ."
 
