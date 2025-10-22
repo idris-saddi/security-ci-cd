@@ -1,22 +1,23 @@
 const express = require('express');
 const app = express();
-const port = 3000;
+const port = process.env.PORT || 3000;
 
 app.get('/', (req, res) => {
   res.send('Hello World! Ceci est l\'application sécurisée.');
 });
 
-// ⚠️ Vulnérabilité intentionnelle pour le DAST : Injection de commande OS simple
+// Correction: suppression de l'exécution de commandes système et assainissement de l'entrée utilisateur
+function sanitize(input) {
+  if (typeof input !== 'string') return '';
+  // Supprimer les caractères non imprimables et limiter la taille pour éviter les abus
+  return input.replace(/[^\x20-\x7E]+/g, '').slice(0, 200);
+}
+
 app.get('/unsafe-route', (req, res) => {
-  const user_input = req.query.cmd;
-  // Ne faites JAMAIS cela dans un vrai code :
-  const { exec } = require('child_process');
-  exec(`echo ${user_input}`, (err, stdout, stderr) => {
-    if (err) {
-      return res.status(500).send(`Erreur: ${err.message}`);
-    }
-    res.send(`Résultat: ${stdout}`);
-  });
+  const raw = req.query.cmd ?? '';
+  const user_input = sanitize(raw);
+  // Répondre en texte brut pour éviter toute interprétation HTML côté client
+  res.type('text/plain').send(`Résultat: ${user_input}`);
 });
 
 app.listen(port, () => {
