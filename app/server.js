@@ -1,4 +1,5 @@
 const express = require('express');
+const helmet = require('helmet');
 const rateLimit = require('express-rate-limit');
 const app = express();
 const port = process.env.PORT || 3000;
@@ -10,6 +11,13 @@ const limiter = rateLimit({
   standardHeaders: true,
   legacyHeaders: false,
 });
+
+// Désactiver l'en-tête X-Powered-By pour ne pas divulguer Express
+app.disable('x-powered-by');
+
+// Appliquer Helmet pour des en-têtes de sécurité par défaut (inclut hidePoweredBy)
+app.use(helmet());
+
 app.use(limiter);
 
 app.get('/', (req, res) => {
