@@ -27,3 +27,36 @@ jobs:
         
     - name: Build Docker Image
       run: docker build -t my-app-image .
+
+    # --- SÉCURITÉ : SAST & SCA ---
+
+    - name: Install Snyk
+      run: npm install -g snyk
+      
+    - name: Snyk Authorization
+      env:
+        SNYK_TOKEN: ${{ secrets.SNYK_TOKEN }} # Secret GitHub requis
+      run: snyk auth $SNYK_TOKEN
+      
+    - name: Snyk SCA (Dependency Check)
+      id: snyk_sca
+      continue-on-error: true # Pour capturer le résultat sans faire échouer l'étape immédiatement
+      working-directory: ./app
+      run: snyk test --json > snyk-sca-results.json
+
+    - name: Snyk SAST (Code Analysis)
+      id: snyk_sast
+      continue-on-error: true # Pour capturer le résultat sans faire échouer l'étape immédiatement
+      working-directory: ./app
+      run: snyk code test --json > snyk-sast-results.json
+      
+    - name: Security Gate Check (Critique/Haute)
+      env:
+        SNYK_SCA_RESULTS: ${{ steps.snyk_sca.outputs.results }} # Pas directement disponible, doit être géré via un script
+      run: |
+        echo "Exécution de la vérification de la porte de sécurité (SAST/SCA)..."
+        
+        snyk test --fail-on=high || (echo "ECHEC: Vulnérabilités SCA Critiques/Hautes détectées." && exit 1)
+        snyk code test --fail-on=high || (echo "ECHEC: Vulnérabilités SAST Critiques/Hautes détectées." && exit 1)
+        
+        echo "SAST/SCA PASSÉ."
