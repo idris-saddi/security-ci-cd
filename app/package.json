@@ -2,7 +2,8 @@
   "name": "devsecops-app",
   "version": "1.0.0",
   "dependencies": {
-    "express": "^4.17.1"
+    "express": "^4.21.1",
+    "express-rate-limit": "^7.2.0"
   },
   "scripts": {
     "test": "echo 'No unit tests configured yet' && exit 0"

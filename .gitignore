@@ -1,0 +1,120 @@
+# Generic .gitignore for security-ci-cd repository
+
+# OS files
+.DS_Store
+Thumbs.db
+ehthumbs.db
+
+# Logs and runtime
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+pnpm-debug.log*
+*.pid
+*.seed
+*.pid.lock
+
+# Environment and secret files
+.env
+.env.local
+.env.*.local
+*.key
+*.pem
+*.crt
+secrets.yml
+*.secret
+
+# Node
+node_modules/
+dist/
+build/
+.next/
+.cache/
+.nyc_output/
+coverage/
+
+# Python
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.python-version
+venv/
+env/
+ENV/
+.venv/
+
+# Java / Gradle / Maven
+target/
+build/
+*.class
+.gradle/
+*.jar
+*.war
+*.ear
+
+# Go
+bin/
+*.exe
+*.test
+vendor/
+
+# Ruby
+/.bundle
+/vendor/bundle
+*.gem
+log/
+tmp/
+
+# Docker
+docker-compose.override.yml
+docker-compose.*.yml
+**/Dockerfile.*.local
+docker/.env
+
+# Terraform
+*.tfstate
+*.tfstate.backup
+.terraform/
+crash.log
+override.tf
+override.tf.json
+terraform.tfvars
+terraform.tfvars.json
+*.tfvars
+
+# CI/CD artifacts and caches
+/.cache
+/.npm
+/coverage/
+/reports/
+/artifacts/
+/tmp/
+
+# IDEs and editors
+.vscode/
+.idea/
+*.sublime-workspace
+*.sublime-project
+*.iml
+
+# Security / keys
+id_rsa
+id_rsa.pub
+*.pem
+*.p12
+*.jks
+
+# Binary files / archives
+*.zip
+*.tar.gz
+*.rar
+*.7z
+*.exe
+*.dll
+*.so
+
+# Misc
+!.gitignore

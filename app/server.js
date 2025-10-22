@@ -1,6 +1,16 @@
 const express = require('express');
+const rateLimit = require('express-rate-limit');
 const app = express();
 const port = process.env.PORT || 3000;
+
+// Limiter global pour réduire le risque de DoS/ReDoS
+const limiter = rateLimit({
+  windowMs: 15 * 60 * 1000, // 15 minutes
+  max: 100, // Limite chaque IP à 100 requêtes par fenêtre
+  standardHeaders: true,
+  legacyHeaders: false,
+});
+app.use(limiter);
 
 app.get('/', (req, res) => {
   res.send('Hello World! Ceci est l\'application sécurisée.');
@@ -20,6 +30,10 @@ app.get('/unsafe-route', (req, res) => {
   res.type('text/plain').send(`Résultat: ${user_input}`);
 });
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`App listening at http://localhost:${port}`);
 });
+
+// Réduire les timeouts pour limiter l'impact d'opérations longues
+server.headersTimeout = 15000; // 15s
+server.requestTimeout = 15000; // 15s

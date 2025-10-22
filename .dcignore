@@ -1,0 +1,9 @@
+# Ignore typical folders for Snyk Code (DeepCode engine)
+node_modules/
+dist/
+build/
+coverage/
+.tmp/
+.temp/
+.git/
+**/*.min.js

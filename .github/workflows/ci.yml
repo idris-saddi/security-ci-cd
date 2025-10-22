@@ -17,7 +17,7 @@ jobs:
     - name: Set up Node.js
       uses: actions/setup-node@v4
       with:
-        node-version: '18'
+        node-version: '20'
 
     - name: Install dependencies and Run Unit Tests
       working-directory: ./app
@@ -42,22 +42,35 @@ jobs:
       id: snyk_sca
       continue-on-error: true # Pour capturer le résultat sans faire échouer l'étape immédiatement
       working-directory: ./app
-      run: snyk test --json > snyk-sca-results.json
+      run: snyk test --json --json-file-output=snyk-sca-results.json --include-ignored
 
     - name: Snyk SAST (Code Analysis)
       id: snyk_sast
       continue-on-error: true # Pour capturer le résultat sans faire échouer l'étape immédiatement
       working-directory: ./app
-      run: snyk code test --json > snyk-sast-results.json
+      run: snyk code test --json --json-file-output=snyk-sast-results.json --exclude=node_modules,dist,build,coverage --include-ignored
+    
+    - name: Upload Snyk SCA Results
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: snyk-sca-results
+        path: app/snyk-sca-results.json
+
+    - name: Upload Snyk SAST Results
+      if: always()
+      uses: actions/upload-artifact@v4
+      with:
+        name: snyk-sast-results
+        path: app/snyk-sast-results.json
       
     - name: Security Gate Check (Critique/Haute)
-      env:
-        SNYK_SCA_RESULTS: ${{ steps.snyk_sca.outputs.results }}
+      working-directory: ./app
       run: |
         echo "Exécution de la vérification de la porte de sécurité (SAST/SCA)..."
         
-        snyk test --severity-threshold=high || (echo "ECHEC: Vulnérabilités SCA Critiques/Hautes détectées." && exit 1)
-        snyk code test --severity-threshold=high || (echo "ECHEC: Vulnérabilités SAST Critiques/Hautes détectées." && exit 1)
+        snyk test --severity-threshold=high --include-ignored || (echo "ECHEC: Vulnérabilités SCA Critiques/Hautes détectées." && exit 1)
+        snyk code test --severity-threshold=high --exclude=node_modules,dist,build,coverage --include-ignored || (echo "ECHEC: Vulnérabilités SAST Critiques/Hautes détectées." && exit 1)
         
         echo "SAST/SCA PASSÉ."
 

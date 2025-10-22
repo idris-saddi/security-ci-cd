@@ -1,5 +1,5 @@
 # Base image
-FROM node:18-alpine
+FROM node:20-alpine
 
 # Set working directory
 WORKDIR /usr/src/app
@@ -10,6 +10,9 @@ RUN npm install --production
 
 # Copy application code
 COPY app/ .
+
+# Run as non-root user for better container security
+USER node
 
 # Expose port
 EXPOSE 3000
