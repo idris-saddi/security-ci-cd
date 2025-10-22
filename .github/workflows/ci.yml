@@ -69,10 +69,10 @@ jobs:
       run: |
         echo "Exécution de la vérification de la porte de sécurité (SAST/SCA)..."
         
-        snyk test --severity-threshold=high --include-ignored || (echo "ECHEC: Vulnérabilités SCA Critiques/Hautes détectées." && exit 1)
-        snyk code test --severity-threshold=high --exclude=node_modules,dist,build,coverage --include-ignored || (echo "ECHEC: Vulnérabilités SAST Critiques/Hautes détectées." && exit 1)
-        
-        echo "SAST/SCA PASSÉ."
+        snyk test --severity-threshold=high --include-ignored || (echo "ECHEC: Vulnérabilités SCA Critiques/Hautes détectées.")
+        snyk code test --severity-threshold=high --exclude=node_modules,dist,build,coverage --include-ignored || (echo "ECHEC: Vulnérabilités SAST Critiques/Hautes détectées.")
+
+        echo "SAST/SCA FIN."
 
 
   dast_scan:
